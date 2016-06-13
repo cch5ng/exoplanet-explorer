@@ -74,15 +74,15 @@ gulp.task('jshint', function () {
 });
 
 // Optimize images
-gulp.task('images', function () {
-  return gulp.src('app/images/**/*')
-    .pipe($.cache($.imagemin({
-      progressive: true,
-      interlaced: true
-    })))
-    .pipe(gulp.dest('dist/images'))
-    .pipe($.size({title: 'images'}));
-});
+// gulp.task('images', function () {
+//   return gulp.src('app/images/**/*')
+//     .pipe($.cache($.imagemin({
+//       progressive: true,
+//       interlaced: true
+//     })))
+//     .pipe(gulp.dest('dist/images'))
+//     .pipe($.size({title: 'images'}));
+// });
 
 // Copy all files at the root level (app)
 gulp.task('copy', function () {
@@ -176,7 +176,7 @@ gulp.task('clean', function (cb) {
 });
 
 // Watch files for changes & reload
-gulp.task('serve', ['styles', 'elements', 'images'], function () {
+gulp.task('serve', ['styles', 'elements'], function () { //, 'images'
   browserSync({
     port: 5000,
     notify: false,
