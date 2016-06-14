@@ -42,9 +42,11 @@ Instructions:
    * @return {Promise}    - A Promise that resolves when the XHR succeeds and fails otherwise.
    */
   function get(url) {
-    return fetch(url, {
-      method: 'get'
-    });
+    return fetch(url);
+    //if no options specificed, default method is GET
+    // return fetch(url, {
+    //   method: 'get'
+    // });
   }
 
   /**
@@ -54,6 +56,7 @@ Instructions:
    */
   function getJSON(url) {
     return get(url).then(function(response) {
+      //return fetch response
       return response.json();
     });
   }
@@ -65,17 +68,39 @@ Instructions:
 
     Your code goes here!
      */
-    getJSON('../data/earth-like-results.json').then(function(result) {
-      return result.results[5];
-    }).then(function(result) {
-      var url2 = '../' + result;
-      getJSON(url2).then(function(result) {
-        createPlanetThumb(result);
-      }).catch(function(err) {
-        console.log('err on 2nd get for indiv planet');
+
+    //cam solution; this way a little cleaner 
+    getJSON('../data/earth-like-results.json')
+      .then(function(result) {
+        //returns a promise based on 2nd http get from results of first http get
+        return getJSON(result.results[5]);
       })
-    }).catch(function(err) {
-      console.log('err on first get for planets list');
-    })
+      .catch(function(err) {
+        console.log('err on first get for planets list');
+        throw(Error('search req error'));
+      })
+      //next then and catch respond to the promise returned from first then
+      .then(function(result) {
+        createPlanetThumb(result);
+      })
+      .catch(function(err) {
+        console.log('err on 2nd get for indiv planet');
+        addSearchHeader('unknown');
+      })
+
+
+    //my solution
+    // getJSON('../data/earth-like-results.json').then(function(result) {
+    //   return result.results[5];
+    // }).then(function(result) {
+    //   var url2 = '../' + result;
+    //   getJSON(url2).then(function(result) {
+    //     createPlanetThumb(result);
+    //   }).catch(function(err) {
+    //     console.log('err on 2nd get for indiv planet');
+    //   })
+    // }).catch(function(err) {
+    //   console.log('err on first get for planets list');
+    // })
   });
 })(document);
