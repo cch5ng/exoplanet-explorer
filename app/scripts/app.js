@@ -80,6 +80,7 @@ Instructions:
         throw(Error('search req error'));
       })
       //next then and catch respond to the promise returned from first then
+      //.then(createPlanetThumb) //this would work as alt to .then below
       .then(function(result) {
         createPlanetThumb(result);
       })
