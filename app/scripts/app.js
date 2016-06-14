@@ -71,7 +71,11 @@ Instructions:
       var url2 = '../' + result;
       getJSON(url2).then(function(result) {
         createPlanetThumb(result);
+      }).catch(function(err) {
+        console.log('err on 2nd get for indiv planet');
       })
+    }).catch(function(err) {
+      console.log('err on first get for planets list');
     })
   });
 })(document);
