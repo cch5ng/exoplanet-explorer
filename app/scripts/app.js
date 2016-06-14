@@ -20,6 +20,7 @@ Instructions:
    * @param {String} query - The search query.
    */
   function addSearchHeader(query) {
+    home.innerHTML = '';
     home.innerHTML = '<h2 class="page-title">query: ' + query + '</h2>';
   }
 
@@ -64,6 +65,13 @@ Instructions:
 
     Your code goes here!
      */
-    // getJSON('../data/earth-like-results.json')
+    getJSON('../data/earth-like-results.json').then(function(result) {
+      return result.results[5];
+    }).then(function(result) {
+      var url2 = '../' + result;
+      getJSON(url2).then(function(result) {
+        createPlanetThumb(result);
+      })
+    })
   });
 })(document);
