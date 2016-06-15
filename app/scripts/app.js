@@ -76,6 +76,13 @@ Instructions:
     }))
   }
 
+  function addPlanetInOrder(data, idx) {
+    if (idx === 0 || tracker[idx - 1]) {
+      console.log('adding planet: ' + idx);
+      createPlanetThumb(data);
+    }
+  }
+
   window.addEventListener('WebComponentsReady', function() {
     home = document.querySelector('section[data-route="home"]');
     /*
@@ -84,16 +91,11 @@ Instructions:
     getJSON('../data/earth-like-results.json')
     .then(function(response) {
       response.results.forEach(function(url, idx) {
-        if (idx) {
-          addSequence(getJSON(url), idx);
-          //addSequence(getJSON(url).then(createPlanetThumb), idx);
-        } else {
-          console.log('gets here idx 0');
-//          getJSON(url).then(function(result) {
-            tracker[0] = true;
-            createPlanetThumb(url);
-//          })
-        }
+        getJSON(url).then(function(result) {
+          tracker[idx] = true;
+          addPlanetInOrder(result, idx);
+        })
+
       });
     });
   });
