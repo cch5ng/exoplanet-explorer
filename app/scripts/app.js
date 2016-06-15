@@ -12,6 +12,7 @@ Instructions:
   'use strict';
 
   var home = null;
+  var tracker = [];
 
   /**
    * Helper function to show the search query.
@@ -53,12 +54,36 @@ Instructions:
     });
   }
 
+  function addPlanetsInOrder(url, idx) {
+    tracker[idx] = true;
+    console.log('planet: ' + idx);
+    if (idx && tracker[idx - 1] == true) {
+      console.log('adding planet: ' + idx);
+      createPlanetThumb(url);
+    } else {
+      console.log('adding planet: ' + idx);
+      createPlanetThumb(url);
+    }
+  }
+
   window.addEventListener('WebComponentsReady', function() {
     home = document.querySelector('section[data-route="home"]');
     /*
     Your code goes here! Uncomment the next line when you're ready to start!
      */
 
-    // getJSON('../data/earth-like-results.json')
+    getJSON('../data/earth-like-results.json').then(function(result) {
+      return result.results;
+    })
+    .then(function(result) {
+      var sequence = Promise.resolve();
+      result.map(function(url, idx) {
+        console.log('url: ' + url);
+        //addPlanetsInOrder(url, idx);
+        getJSON(url).then(function(result) {
+          addPlanetsInOrder(result, idx);
+        })
+      })
+    })
   });
 })(document);
