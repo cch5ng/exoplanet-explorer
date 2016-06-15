@@ -72,18 +72,27 @@ Instructions:
     Your code goes here! Uncomment the next line when you're ready to start!
      */
 
-    getJSON('../data/earth-like-results.json').then(function(result) {
-      return result.results;
-    })
-    .then(function(result) {
-      var sequence = Promise.resolve();
-      result.map(function(url, idx) {
-        console.log('url: ' + url);
-        //addPlanetsInOrder(url, idx);
-        getJSON(url).then(function(result) {
-          addPlanetsInOrder(result, idx);
+    //cam solution
+    // getJSON('../data/earth-like-results.json')
+    //   .then(function(result) {
+    //     result.results.map(function(url, idx) {
+    //       getJSON(url).then(createPlanetThumb)
+    //     })
+    //   })
+
+
+
+    //my solution (this runs in parallel and checks that planets added in order)
+    getJSON('../data/earth-like-results.json')
+      .then(function(result) {
+        //var sequence = Promise.resolve();
+        result.results.map(function(url, idx) {
+          //console.log('url: ' + url);
+          getJSON(url).then(function(result) {
+            addPlanetsInOrder(result, idx);
+          })
         })
       })
-    })
+
   });
 })(document);
