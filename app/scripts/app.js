@@ -59,23 +59,7 @@ Instructions:
     });
   }
 
-  function addSequence(promise, idx) {
-    return (promise.then(function(result) {
-//      getJSON(url).then(function(result) {
-        console.log('gets here');
-        tracker[idx] = true;
-        console.log('idx: ' + idx);
-        console.log('tracker[idx - 1]: ' + tracker[idx - 1]);
-        if (idx > 0 && tracker[idx - 1]) {
-          createPlanetThumb(result[idx]);
-        }
-//      })
-    })
-    .catch(function(error) {
-      Error('error: ' + error);
-    }))
-  }
-
+//my solution
   function addPlanetInOrder(data, idx) {
     if (idx === 0 || tracker[idx - 1]) {
       console.log('adding planet: ' + idx);
@@ -88,15 +72,30 @@ Instructions:
     /*
     Refactor this code!
      */
+    //cam solution (serial)
     getJSON('../data/earth-like-results.json')
     .then(function(response) {
-      response.results.forEach(function(url, idx) {
-        getJSON(url).then(function(result) {
-          tracker[idx] = true;
-          addPlanetInOrder(result, idx);
-        })
+      var sequence = Promise.resolve();
 
+      response.results.forEach(function(url, idx) {
+        sequence.then(function() {
+          return getJSON(url)
+        }).then(createPlanetThumb)
       });
+    })
+    .catch(function(e) {
+      console.log("error: " + e);
     });
+
+    //my solution
+    // getJSON('../data/earth-like-results.json')
+    // .then(function(response) {
+    //   response.results.forEach(function(url, idx) {
+    //     getJSON(url).then(function(result) {
+    //       tracker[idx] = true;
+    //       addPlanetInOrder(result, idx);
+    //     });
+    //   });
+    // });
   });
 })(document);
