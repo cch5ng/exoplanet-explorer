@@ -176,7 +176,7 @@ gulp.task('clean', function (cb) {
 });
 
 // Watch files for changes & reload
-gulp.task('serve', ['styles', 'elements', 'images'], function () {
+gulp.task('serve', ['styles', 'elements'], function () { //, 'images'
   browserSync({
     port: 5000,
     notify: false,

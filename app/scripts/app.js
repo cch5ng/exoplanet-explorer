@@ -14,6 +14,8 @@ Instructions:
   'use strict';
 
   var home = null;
+  var url = '../data/earth-like-results.json';
+  var tracker = [];
 
   /**
    * Helper function to show the search query.
@@ -57,6 +59,23 @@ Instructions:
     });
   }
 
+  function addSequence(promise, idx) {
+    return (promise.then(function(result) {
+//      getJSON(url).then(function(result) {
+        console.log('gets here');
+        tracker[idx] = true;
+        console.log('idx: ' + idx);
+        console.log('tracker[idx - 1]: ' + tracker[idx - 1]);
+        if (idx > 0 && tracker[idx - 1]) {
+          createPlanetThumb(result[idx]);
+        }
+//      })
+    })
+    .catch(function(error) {
+      Error('error: ' + error);
+    }))
+  }
+
   window.addEventListener('WebComponentsReady', function() {
     home = document.querySelector('section[data-route="home"]');
     /*
@@ -64,8 +83,17 @@ Instructions:
      */
     getJSON('../data/earth-like-results.json')
     .then(function(response) {
-      response.results.forEach(function(url) {
-        getJSON(url).then(createPlanetThumb);
+      response.results.forEach(function(url, idx) {
+        if (idx) {
+          addSequence(getJSON(url), idx);
+          //addSequence(getJSON(url).then(createPlanetThumb), idx);
+        } else {
+          console.log('gets here idx 0');
+//          getJSON(url).then(function(result) {
+            tracker[0] = true;
+            createPlanetThumb(url);
+//          })
+        }
       });
     });
   });
