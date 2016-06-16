@@ -65,11 +65,34 @@ Hint: you'll probably still need to use .map.
 
       addSearchHeader(response.query);
 
-      //my solution
-      Promise.all(response.results.map(function(url) {
-        getJSON(url).then(createPlanetThumb);
-      }));
+    //   //cam solution
+    //   var promiseAr = response.results.map(function(url) {
+    //     getJSON(url);
+    //   });
+    //   return Promise.all(promiseAr);
+    // })
+    // .then(function(planetDataAr) {
+    //   console.log('planetDataAr' + planetDataAr);
+    //   planetDataAr.forEach(function(data) {
+    //     createPlanetThumb(data);
+    //   })
+    // })
+//   });
 
-    });
+
+      //my solution
+      return Promise.all(response.results.map(function(url) {
+        getJSON(url);
+        //getJSON(url).then(createPlanetThumb);
+      }));
+    })
+    .then(function(planetsAr) {
+      console.log('planetsAr' + planetsAr);
+      planetsAr.forEach(function(planet) {
+        createPlanetThumb(planet);
+      })
+    })
+   //});
+
   });
 })(document);
