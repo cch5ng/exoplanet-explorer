@@ -60,12 +60,12 @@ Hint: you'll probably still need to use .map.
     /*
     Refactor this code with Promise.all!
      */
-    getJSON('../data/earth-like-results.json')
-    .then(function(response) {
+    //cam solution
+    // getJSON('../data/earth-like-results.json')
+    // .then(function(response) {
 
-      addSearchHeader(response.query);
+    //   addSearchHeader(response.query);
 
-    //   //cam solution
     //   var promiseAr = response.results.map(function(url) {
     //     getJSON(url);
     //   });
@@ -81,18 +81,43 @@ Hint: you'll probably still need to use .map.
 
 
       //my solution
-      return Promise.all(response.results.map(function(url) {
-        getJSON(url);
-        //getJSON(url).then(createPlanetThumb);
-      }));
+    getJSON('../data/earth-like-results.json')
+    .then(function(response) {
+      addSearchHeader(response.query);
+      var promisesAr = [];
+
+      for (var i = 0; i < response.results.length; i++) {
+        promisesAr.push(getJSON('../' + response.results[i]));
+      }
+
+//issues getting the promisesAr to populate using map function
+      // var promisesAr = response.results.map(function(url) {
+      //   console.log('url: ' + url);
+      //   var mProm = new Promise(function() {
+      //     getJSON("../" + url);
+      //   });
+      // });
+
+      console.log('promisesAr: ' + promisesAr);
+
+      return Promise.all(promisesAr);
     })
-    .then(function(planetsAr) {
-      console.log('planetsAr' + planetsAr);
-      planetsAr.forEach(function(planet) {
-        createPlanetThumb(planet);
-      })
-    })
-   //});
+    //slightly cleaner
+    .then(function(results) {
+      console.log('results length: ' + results.length);
+      results.forEach(function(data) {
+        createPlanetThumb(data);
+      });
+    });
+
+      //working method for me but it is using a bit of nested then
+      // Promise.all(promisesAr).then(function(results) {
+      //   console.log('results length: ' + results.length);
+      //   results.forEach(function(data) {
+      //     createPlanetThumb(data);
+      //   });
+      // });
+    //})
 
   });
 })(document);
