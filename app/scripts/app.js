@@ -13,6 +13,7 @@ Hint: you'll probably still need to use .map.
   'use strict';
 
   var home = null;
+  var tracker = [];
 
   /**
    * Helper function to show the search query.
@@ -64,9 +65,11 @@ Hint: you'll probably still need to use .map.
 
       addSearchHeader(response.query);
 
-      response.results.map(function(url) {
+      //my solution
+      Promise.all(response.results.map(function(url) {
         getJSON(url).then(createPlanetThumb);
-      });
+      }));
+
     });
   });
 })(document);
